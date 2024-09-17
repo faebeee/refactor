@@ -4,8 +4,8 @@ import { Command } from "commander";
 import Pkg from '../package.json' assert { type: 'json' };
 import { commandSetup } from "../lib/utils/command-setup.js";
 import { createScreenshots, takeScreenshotsForAllConfigs } from "../lib/utils/create-screenshots.js";
-import { getConfig } from "../lib/utils/get-config.js";
-import { compareImages } from "../lib/utils/compare-images.js";
+import { getConfig } from "refactor-core";
+import { compare } from "../lib/utils/compare-images.js";
 import { cleanup } from "../lib/utils/cleanup.js";
 
 const program = new Command();
@@ -45,7 +45,7 @@ program.command('compare')
             const config = configs[index];
             if (!opts.only || !!opts.only && config.only === opts.id) {
                 await createScreenshots(config, true, 'compare')
-                await compareImages(config);
+                await compare(config);
             }
         }
     });

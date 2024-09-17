@@ -1,10 +1,9 @@
-import { cleanupFolder } from "./fs-utils.js";
 import path from "path";
-import { logger } from "./logger.js";
+import { cleanupFolder, logger } from "refactor-core";
 
 /**
  *
- * @param {PagesConfig[]} configs
+ * @param {IPagesConfig[]} configs
  */
 export const cleanup = async (configs) => {
     for (const configIndex in configs) {

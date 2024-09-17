@@ -19,6 +19,18 @@ importers:
       figures:
         specifier: ^3.2.0
         version: 3.2.0
+      progress:
+        specifier: ^2.0.3
+        version: 2.0.3
+      puppeteer:
+        specifier: ^23.3.0
+        version: 23.3.1
+      refactor-core:
+        specifier: workspace:*
+        version: link:../refactor-core
+
+  packages/refactor-core:
+    dependencies:
       pino:
         specifier: ^9.4.0
         version: 9.4.0
@@ -31,9 +43,6 @@ importers:
       pngjs:
         specifier: ^5.0.0
         version: 5.0.0
-      progress:
-        specifier: ^2.0.3
-        version: 2.0.3
       puppeteer:
         specifier: ^23.3.0
         version: 23.3.1

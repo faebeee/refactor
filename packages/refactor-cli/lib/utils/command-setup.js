@@ -1,4 +1,4 @@
-import { logger } from "./logger.js";
+import { logger } from "refactor-core";
 
 export const commandSetup = (program) => {
     const quiet = program.opts().quiet;

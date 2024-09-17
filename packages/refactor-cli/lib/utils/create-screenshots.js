@@ -1,11 +1,9 @@
 import puppeteer from "puppeteer";
-import { logger } from "./logger.js";
 import fs from 'fs';
-import { getScreenshotOutputConfig } from "./get-screenshot-file-name.js";
 import ProgressBar from "progress";
 import figures from "figures";
-import { doesFileExist } from "./fs-utils.js";
 import SimpleTable from "cli-simple-table";
+import { doesFileExist, getScreenshotOutputConfig, logger } from "refactor-core";
 
 export const getBrowser = async (width, height) => {
     logger.debug('Starting browser');
@@ -19,7 +17,7 @@ export const getBrowser = async (width, height) => {
 
 /**
  * Creates a screenshot using the given configuration options.
- * @param {PagesConfig} config - The configuration options for creating the screenshot.
+ * @param {IPagesConfig} config - The configuration options for creating the screenshot.
  * @param {boolean} overwrite - Overwrite existing screenshots
  * @param {'original' | 'compare'} type - Type of screenshots
  */
@@ -64,8 +62,8 @@ export const createScreenshots = async (config, overwrite = false, type = 'origi
 
 /**
  * @param {import('puppeteer').Page} page
- * @param {PagesConfig} config
- * @param {PagesEntry} entry
+ * @param {IPagesConfig} config
+ * @param {IPagesEntry} entry
  * @param {'original'|'compare'} type
  * @param {boolean} overwrite
  */
@@ -86,7 +84,7 @@ export const takeScreenshotsForEntry = async (page, config, entry, type, overwri
 /**
  *
  * @param {import('puppeteer').Page} page
- * @param {PagesEntry} entry
+ * @param {IPagesEntry} entry
  * @param {string} url
  * @param {string} screenshotFile
  * @param {boolean} fullpage
@@ -106,7 +104,7 @@ export const takeScreenshot = async (page, entry, url, screenshotFile, fullpage)
 
 /**
  *
- * @param {PagesConfig[]} configs
+ * @param {IPagesConfig[]} configs
  * @param {boolean} overwrite
  * @param {'original'|'compare'} type
  */
