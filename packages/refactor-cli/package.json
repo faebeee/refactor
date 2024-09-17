@@ -1,0 +1,30 @@
+{
+  "name": "refactor-cli",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "cli-simple-table": "^1.1.1",
+    "commander": "^12.1.0",
+    "figures": "^3.2.0",
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.2.2",
+    "pixelmatch": "^5.2.1",
+    "pngjs": "^5.0.0",
+    "progress": "^2.0.3",
+    "puppeteer": "^23.3.0"
+  },
+  "bin": {
+    "refactor": "./cli/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faebeee/refactor-insurance.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/faebeee/refactor-insurance/issues"
+  },
+  "homepage": "https://github.com/faebeee/refactor-insurance#readme"
+}
