@@ -1,6 +1,6 @@
 import ProgressBar from "progress";
 import figures from "figures";
-import { compareImages, logger } from "refactor-core";
+import { compareImages, logger } from "refaktor-core";
 
 /**
  *

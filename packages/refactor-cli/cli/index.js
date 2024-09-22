@@ -11,7 +11,7 @@ import {
     getConfigOutputFolder, HtmlSerializer,
     transformAll,
     transformImageToBase64
-} from "refactor-core";
+} from "refaktor-core";
 import { compare } from "../lib/utils/compare-images.js";
 import { cleanup } from "../lib/utils/cleanup.js";
 import path from "path";

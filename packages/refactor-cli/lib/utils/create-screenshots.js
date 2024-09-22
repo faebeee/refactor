@@ -3,7 +3,7 @@ import fs from 'fs';
 import ProgressBar from "progress";
 import figures from "figures";
 import SimpleTable from "cli-simple-table";
-import { doesFileExist, getScreenshotOutputConfig, logger } from "refactor-core";
+import { doesFileExist, getScreenshotOutputConfig, logger } from "refaktor-core";
 
 export const getBrowser = async (width, height) => {
     logger.debug('Starting browser');

@@ -1,5 +1,5 @@
 import path from "path";
-import { cleanupFolder, logger } from "refactor-core";
+import { cleanupFolder, logger } from "refaktor-core";
 
 /**
  *
