@@ -1,5 +1,5 @@
 {
-  "name": "refactor-cli",
+  "name": "refaktor-cli",
   "version": "1.0.2",
   "description": "",
   "type": "module",
@@ -9,7 +9,7 @@
     "figures": "^3.2.0",
     "progress": "^2.0.3",
     "puppeteer": "^23.3.0",
-    "refactor-core": "workspace:*"
+    "refaktor-core": "workspace:*"
   },
   "bin": {
     "refactor": "./cli/index.js"
