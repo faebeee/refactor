@@ -4,21 +4,32 @@
   "description": "",
   "type": "module",
   "dependencies": {
-    "pixelmatch": "^5.2.1",
-    "pngjs": "^5.0.0",
+    "cli-simple-table": "^1.1.1",
+    "figures": "^6.1.0",
     "pino": "^9.4.0",
     "pino-pretty": "^11.2.2",
+    "pixelmatch": "^5.2.1",
+    "pngjs": "^5.0.0",
     "puppeteer": "^23.3.0"
   },
-  "main": "src/index.js",
+  "main": "./bin/src/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/faebeee/refactor.git"
+  },
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/faebeee/refactor/issues"
   },
-  "homepage": "https://github.com/faebeee/refactor#readme"
+  "homepage": "https://github.com/faebeee/refactor#readme",
+  "devDependencies": {
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.5",
+    "typescript": "^5"
+  }
 }

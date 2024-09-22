@@ -1,0 +1,18 @@
+import {IPagesEntry} from "./IPagesEntry";
+
+export type ICompareResult = {
+  created_at: string;
+  id: string,
+  // config: Omit<IPagesConfig, 'setup'> & { pages: Omit<IPagesEntry, 'setup'>[] }
+  results: ICompareResultEntry[]
+}
+
+export type ICompareResultEntry = {
+  id: string;
+  url: string;
+  pass: boolean
+  config: Omit<IPagesEntry, 'setup'>;
+  original: string;
+  current: string;
+  diff: string
+}

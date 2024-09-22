@@ -24,13 +24,19 @@ importers:
         version: 2.0.3
       puppeteer:
         specifier: ^23.3.0
-        version: 23.3.1
+        version: 23.3.1(typescript@5.6.2)
       refactor-core:
         specifier: workspace:*
         version: link:../refactor-core
 
   packages/refactor-core:
     dependencies:
+      cli-simple-table:
+        specifier: ^1.1.1
+        version: 1.1.1
+      figures:
+        specifier: ^6.1.0
+        version: 6.1.0
       pino:
         specifier: ^9.4.0
         version: 9.4.0
@@ -45,7 +51,17 @@ importers:
         version: 5.0.0
       puppeteer:
         specifier: ^23.3.0
-        version: 23.3.1
+        version: 23.3.1(typescript@5.6.2)
+    devDependencies:
+      '@types/pixelmatch':
+        specifier: ^5.2.6
+        version: 5.2.6
+      '@types/pngjs':
+        specifier: ^6.0.5
+        version: 6.0.5
+      typescript:
+        specifier: ^5
+        version: 5.6.2
 
 packages:
 
@@ -69,8 +85,14 @@ packages:
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
 
-  '@types/node@22.5.5':
-    resolution: {integrity: sha512-Xjs4y5UPO/CLdzpgR6GirZJx36yScjh73+2NlLlkFRSoQN8B0DpfXPdZGnvVmLRLOsqDpOfTNv7D9trgGhmOIA==}
+  '@types/node@20.16.5':
+    resolution: {integrity: sha512-VwYCweNo3ERajwy0IUlqqcyZ8/A7Zwa9ZP3MnENWcB11AejO+tLy3pu850goUW2FC/IJMdZUfKpX/yxL1gymCA==}
+
+  '@types/pixelmatch@5.2.6':
+    resolution: {integrity: sha512-wC83uexE5KGuUODn6zkm9gMzTwdY5L0chiK+VrKcDfEjzxh1uadlWTvOmAbCpnM9zx/Ww3f8uKlYQVnO/TrqVg==}
+
+  '@types/pngjs@6.0.5':
+    resolution: {integrity: sha512-0k5eKfrA83JOZPppLtS2C7OUtyNAl2wKNxfyYl9Q5g9lPkgBl/9hNyAu6HuEH2J4XmIv2znEpkDd0SaZVxW6iQ==}
 
   '@types/yauzl@2.10.3':
     resolution: {integrity: sha512-oJoftv0LSuaDZE3Le4DbKX+KS9G36NzOeSap90UIK0yMA/NhKJhqlSGtNDORNRaIbQfzjXDrQa0ytJ6mNRGz/Q==}
@@ -292,6 +314,10 @@ packages:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
     engines: {node: '>=8'}
 
+  figures@6.1.0:
+    resolution: {integrity: sha512-d+l3qxjSesT4V7v2fh+QnmFnUWv9lSpjarhShNTgBOfA0ttejbQUAlHLitbjkoRiDulW0OPoQPYIGhIC8ohejg==}
+    engines: {node: '>=18'}
+
   fs-extra@11.2.0:
     resolution: {integrity: sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==}
     engines: {node: '>=14.14'}
@@ -343,6 +369,10 @@ packages:
   is-fullwidth-code-point@3.0.0:
     resolution: {integrity: sha512-zymm5+u+sCsSWyD9qNaejV3DFvhCKclKdizYaJUuHA83RLjb7nSuGnddCHGv0hk+KY7BMAlsWeK4Ueg6EV6XQg==}
     engines: {node: '>=8'}
+
+  is-unicode-supported@2.1.0:
+    resolution: {integrity: sha512-mE00Gnza5EEB3Ds0HfMyllZzbBrmLOX3vfWoj9A9PEnTfratQ/BcaJOuMhnkhjXvb2+FkY3VuHqtAGpTPmglFQ==}
+    engines: {node: '>=18'}
 
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
@@ -579,6 +609,11 @@ packages:
   typed-query-selector@2.12.0:
     resolution: {integrity: sha512-SbklCd1F0EiZOyPiW192rrHZzZ5sBijB6xM+cpmrwDqObvdtunOHHIk9fCGsoK5JVIYXoyEp4iEdE3upFH3PAg==}
 
+  typescript@5.6.2:
+    resolution: {integrity: sha512-NW8ByodCSNCwZeghjN3o+JX5OFH0Ojg6sadjEKY4huZ52TqbJTJnDo5+Tw98lSy63NZvi4n+ez5m2u5d4PkZyw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
   unbzip2-stream@1.4.3:
     resolution: {integrity: sha512-mlExGW4w71ebDJviH16lQLtZS32VKqsSfk80GCfUlwT/4/hNRFsoscrF/c++9xinkMzECL1uL9DDwXqFWkruPg==}
 
@@ -660,14 +695,21 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@types/node@22.5.5':
+  '@types/node@20.16.5':
     dependencies:
       undici-types: 6.19.8
-    optional: true
+
+  '@types/pixelmatch@5.2.6':
+    dependencies:
+      '@types/node': 20.16.5
+
+  '@types/pngjs@6.0.5':
+    dependencies:
+      '@types/node': 20.16.5
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 22.5.5
+      '@types/node': 20.16.5
     optional: true
 
   abort-controller@3.0.0:
@@ -790,12 +832,14 @@ snapshots:
 
   commander@12.1.0: {}
 
-  cosmiconfig@9.0.0:
+  cosmiconfig@9.0.0(typescript@5.6.2):
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.0
       js-yaml: 4.1.0
       parse-json: 5.2.0
+    optionalDependencies:
+      typescript: 5.6.2
 
   data-uri-to-buffer@6.0.2: {}
 
@@ -873,6 +917,10 @@ snapshots:
     dependencies:
       escape-string-regexp: 1.0.5
 
+  figures@6.1.0:
+    dependencies:
+      is-unicode-supported: 2.1.0
+
   fs-extra@11.2.0:
     dependencies:
       graceful-fs: 4.2.11
@@ -929,6 +977,8 @@ snapshots:
   is-arrayish@0.2.1: {}
 
   is-fullwidth-code-point@3.0.0: {}
+
+  is-unicode-supported@2.1.0: {}
 
   joycon@3.1.1: {}
 
@@ -1084,11 +1134,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  puppeteer@23.3.1:
+  puppeteer@23.3.1(typescript@5.6.2):
     dependencies:
       '@puppeteer/browsers': 2.4.0
       chromium-bidi: 0.6.5(devtools-protocol@0.0.1330662)
-      cosmiconfig: 9.0.0
+      cosmiconfig: 9.0.0(typescript@5.6.2)
       devtools-protocol: 0.0.1330662
       puppeteer-core: 23.3.1
       typed-query-selector: 2.12.0
@@ -1212,13 +1262,14 @@ snapshots:
 
   typed-query-selector@2.12.0: {}
 
+  typescript@5.6.2: {}
+
   unbzip2-stream@1.4.3:
     dependencies:
       buffer: 5.7.1
       through: 2.3.8
 
-  undici-types@6.19.8:
-    optional: true
+  undici-types@6.19.8: {}
 
   universalify@2.0.1: {}
 

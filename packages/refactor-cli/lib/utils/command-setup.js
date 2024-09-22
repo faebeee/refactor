@@ -1,7 +1,7 @@
 import { logger } from "refactor-core";
 
 export const commandSetup = (program) => {
-    const quiet = program.opts().quiet;
+    const quiet = program.opts().silent;
     if (quiet) {
         logger.level = 'silent';
     }
