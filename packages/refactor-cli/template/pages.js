@@ -1,6 +1,6 @@
 export default [{
     id: "test",
-    url: "http://localhost:3000",
+    url: "https://npmjs.com",
     viewport: [1080, 1024],
     /**
      * @param {import('puppeteer').Page} page
@@ -10,7 +10,7 @@ export default [{
     },
     pages: [
         {
-            path: '/de',
+            path: '/',
             id: 'landingpage',
             /**
              * @param {import('puppeteer').Page} page
@@ -19,25 +19,6 @@ export default [{
             setup: async (page) => {
             }
         },
-        {
-            path: '/de/map-module/participant',
-            id: 'participant-document-groups',
-            /**
-             * @param {import('puppeteer').Page} page
-             * @returns {Promise<void>}
-             */
-            setup: async (page) => {
-            }
-        },
-        {
-            path: '/de/map-module/participant',
-            id: 'participang-map-module',
-            /**
-             * @param {import('puppeteer').Page} page
-             * @returns {Promise<void>}
-             */
-            setup: async (page) => {
-            }
-        }
+
     ]
 }]

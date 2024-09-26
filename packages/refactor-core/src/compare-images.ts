@@ -1,4 +1,4 @@
-import {getConfigOutputFolder, getScreenshotOutputConfig} from "./get-screenshot-file-name.js";
+import {getConfigOutputFolder, getScreenshotOutputConfig} from "./get-screenshot-file-name";
 import {PNG} from "pngjs";
 import fs from "fs";
 import pixelmatch from "pixelmatch";

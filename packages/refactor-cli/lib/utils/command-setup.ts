@@ -1,5 +1,10 @@
 import { logger } from "refaktor-core";
+import { Command } from 'commander';
 
+/**
+ *
+ * @param {Command} program
+ */
 export const commandSetup = (program) => {
     const quiet = program.opts().silent;
     if (quiet) {

@@ -11,15 +11,15 @@ export class CliSerializer implements ISerializer {
     const table = new SimpleTable();
     table.header('Config', 'Page', 'Status');
 
+    console.log(results);
 
     results.forEach((result) => {
       result.results.forEach(entry => {
+        console.log(entry.id, entry.pass)
         table.row(result.id, entry.id, entry.pass ? figures.tick : figures.cross)
       })
     })
 
-    if (logger.level === 'info') {
-      console.log(table.toString());
-    }
+    console.log(table.toString());
   }
 }

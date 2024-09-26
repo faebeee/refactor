@@ -1,5 +1,6 @@
 import {ISerializer} from "./ISerializer";
 import {ICompareResult} from "../types";
+import fs from 'fs';
 
 export class HtmlSerializer implements ISerializer {
   file: string;
@@ -9,7 +10,7 @@ export class HtmlSerializer implements ISerializer {
   }
 
   async serialize(results: ICompareResult[]) {
-    // console.log(await fs.promises.readFile('../template/report.html'));
+    console.log(await fs.promises.readFile('../template/report.html'));
     // console.log(import.meta.url);
   }
 }

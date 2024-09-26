@@ -1,11 +1,21 @@
-import puppeteer from "puppeteer";
+import puppeteer, { Page } from "puppeteer";
 import fs from 'fs';
 import ProgressBar from "progress";
 import figures from "figures";
 import SimpleTable from "cli-simple-table";
-import { doesFileExist, getScreenshotOutputConfig, logger } from "refaktor-core";
+import {
+    doesFileExist,
+    getScreenshotOutputConfig, IScreenshotType,
+    logger
+} from "refaktor-core";
 
-export const getBrowser = async (width, height) => {
+/**
+ *
+ * @param {number?} width
+ * @param {number?} height
+ * @returns {Promise<Browser>}
+ */
+export const getBrowser = async (width?, height?) => {
     logger.debug('Starting browser');
     return puppeteer.launch({
         headless: true,
@@ -17,11 +27,11 @@ export const getBrowser = async (width, height) => {
 
 /**
  * Creates a screenshot using the given configuration options.
- * @param {IPagesConfig} config - The configuration options for creating the screenshot.
- * @param {boolean} overwrite - Overwrite existing screenshots
- * @param {'original' | 'compare'} type - Type of screenshots
+ * @type {import("refaktor-core").IPagesConfig} config
+ * @type {boolean} overwrite
+ * @type {import("refaktor-core").IScreenshotType} type
  */
-export const createScreenshots = async (config, overwrite = false, type = 'original') => {
+export const createScreenshots = async (config, overwrite = false, type ) => {
     const browser = await getBrowser();
     const page = await browser.newPage();
 
@@ -51,7 +61,7 @@ export const createScreenshots = async (config, overwrite = false, type = 'origi
         const view = config.pages[index];
         const url = `${config.url}${view.path}`
         bar?.tick({url})
-        await takeScreenshotsForEntry(page, config, view, type, overwrite)
+        await takeScreenshotsForEntry(page, config, view, type ?? IScreenshotType.ORIGINAL, overwrite)
         stats.created++;
     }
 
@@ -61,11 +71,13 @@ export const createScreenshots = async (config, overwrite = false, type = 'origi
 }
 
 /**
- * @param {import('puppeteer').Page} page
- * @param {IPagesConfig} config
- * @param {IPagesEntry} entry
- * @param {'original'|'compare'} type
+ *
+ * @param {Page} page
+ * @param {import("refaktor-core").IPagesConfig} config
+ * @param {import("refaktor-core").IPagesEntry} entry
+ * @param {import("refaktor-core").IScreenshotType }type
  * @param {boolean} overwrite
+ * @returns {Promise<boolean>}
  */
 export const takeScreenshotsForEntry = async (page, config, entry, type, overwrite) => {
     const {file, folder} = getScreenshotOutputConfig(config, entry, type);
@@ -83,11 +95,12 @@ export const takeScreenshotsForEntry = async (page, config, entry, type, overwri
 
 /**
  *
- * @param {import('puppeteer').Page} page
- * @param {IPagesEntry} entry
+ * @param {Page} page
+ * @param {import("refaktor-core").IPagesEntry} entry
  * @param {string} url
  * @param {string} screenshotFile
  * @param {boolean} fullpage
+ * @returns {Promise<void>}
  */
 export const takeScreenshot = async (page, entry, url, screenshotFile, fullpage) => {
     logger.debug(`Visit ${url}`);
@@ -104,9 +117,10 @@ export const takeScreenshot = async (page, entry, url, screenshotFile, fullpage)
 
 /**
  *
- * @param {IPagesConfig[]} configs
+ * @param {import("refaktor-core").IPagesConfig[]} configs
  * @param {boolean} overwrite
- * @param {'original'|'compare'} type
+ * @param {import("refaktor-core").IScreenshotType} type
+ * @returns {Promise<void>}
  */
 export const takeScreenshotsForAllConfigs = async (configs, overwrite, type) => {
     const totalPages = configs.reduce((total, config) => total + config.pages.length, 0);
@@ -124,7 +138,7 @@ export const takeScreenshotsForAllConfigs = async (configs, overwrite, type) => 
 
     for (const configIndexs in configs) {
         const config = configs[configIndexs]
-        const browser = await getBrowser();
+        const browser = await getBrowser(config.viewport?.[0] ?? 1600, config.viewport?.[1] ?? 1200);
         const page = await browser.newPage();
         await page.setViewport({width: config.viewport?.[0] ?? 1600, height: config.viewport?.[1] ?? 1200});
 

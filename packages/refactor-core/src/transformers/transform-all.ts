@@ -5,7 +5,7 @@ import {ICompareResult} from "../types/ICompareResult";
 
 export const transformAll = async (results: ResultCollector[]): Promise<ICompareResult[]> => {
   logger.debug('Transforming results');
-  const transformed = []
+  const transformed:ICompareResult[] = []
   for (const rIndex in results) {
     const result = results[rIndex];
     transformed.push(await result.transform());

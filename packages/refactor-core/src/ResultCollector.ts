@@ -1,7 +1,5 @@
 import {logger} from "./logger";
-import {ICompareResult, ICompareResultEntry} from "./types/ICompareResult";
-import {IPagesConfig, IPagesEntry} from "./types";
-import {ITransformer} from "./types/ITransformer";
+import {ICompareResult, ICompareResultEntry, IPagesConfig, IPagesEntry, ITransformer} from "./types";
 
 export class ResultCollector {
   result: ICompareResult;
@@ -38,7 +36,7 @@ export class ResultCollector {
    * Transforms the results using a series of transformers.
    */
   async transform(): Promise<ICompareResult> {
-    const results = [];
+    const results:ICompareResultEntry[] = [];
 
     for (const rIndex in this.result.results) {
       results.push(await this.runTransformer(this.result.results[rIndex]))

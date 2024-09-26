@@ -12,10 +12,10 @@
     "pngjs": "^5.0.0",
     "puppeteer": "^23.3.0"
   },
-  "main": "./src/index.ts",
+  "main": "./dist/src/index.js",
   "publishConfig": {
-    "main": "bin/src/index.js",
-    "typings": "bin/src/index.d.ts"
+    "main": "./dist/src/index.js",
+    "typings": "./dist/src/index.d.ts"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,8 @@
   "devDependencies": {
     "@types/pixelmatch": "^5.2.6",
     "@types/pngjs": "^6.0.5",
-    "typescript": "^5"
+    "@types/node": "^22.5.5",
+    "typescript": "^5.6.2",
+    "fix-esm-import-path": "^1.10.0"
   }
 }

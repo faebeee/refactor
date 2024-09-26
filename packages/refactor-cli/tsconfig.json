@@ -3,10 +3,9 @@
     "rootDir": "./",
     "outDir": "dist",
     "strict": true,
-    "target": "es6",
-    "module": "ES2020",
+    "target": "ESNext",
+    "module": "CommonJS",
     "sourceMap": true,
-    "declaration": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "noImplicitAny": false

@@ -3,7 +3,8 @@ import { cleanupFolder, logger } from "refaktor-core";
 
 /**
  *
- * @param {IPagesConfig[]} configs
+ * @param {import("refaktor-core").IPagesConfig[]} configs
+ * @returns {Promise<void>}
  */
 export const cleanup = async (configs) => {
     for (const configIndex in configs) {
