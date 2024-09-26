@@ -6,6 +6,7 @@
     "target": "ESNext",
     "module": "CommonJS",
     "sourceMap": true,
+    "declaration": false,
     "esModuleInterop": true,
     "moduleResolution": "node",
     "noImplicitAny": false

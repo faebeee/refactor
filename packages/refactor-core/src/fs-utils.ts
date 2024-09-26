@@ -1,5 +1,6 @@
 import fs from "fs";
 import {logger} from "./logger.js";
+import path from "path";
 
 export const cleanupFolder = async (dir: string) => {
   if (await doesFileExist(dir)) {
@@ -22,3 +23,6 @@ export const doesFileExist = async (file: string) => {
   }
   return false
 }
+
+
+export const getRootDir = () => path.resolve(__dirname, '..')

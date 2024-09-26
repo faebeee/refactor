@@ -1,6 +1,8 @@
 import {ISerializer} from "./ISerializer";
 import {ICompareResult} from "../types";
 import fs from 'fs';
+import {getRootDir} from "../fs-utils";
+import path from "path";
 
 export class HtmlSerializer implements ISerializer {
   file: string;
@@ -10,7 +12,6 @@ export class HtmlSerializer implements ISerializer {
   }
 
   async serialize(results: ICompareResult[]) {
-    console.log(await fs.promises.readFile('../template/report.html'));
-    // console.log(import.meta.url);
+    console.log((await fs.promises.readFile(path.resolve(getRootDir(), 'src/template/report.html'))).toString());
   }
 }

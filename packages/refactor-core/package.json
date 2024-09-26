@@ -2,7 +2,7 @@
   "name": "refaktor-core",
   "version": "1.0.4",
   "description": "",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "cli-simple-table": "^1.1.1",
     "figures": "^6.1.0",
@@ -10,20 +10,21 @@
     "pino-pretty": "^11.2.2",
     "pixelmatch": "^5.2.1",
     "pngjs": "^5.0.0",
-    "puppeteer": "^23.3.0"
+    "puppeteer": "^23.3.0",
+    "chalk": "^4.1.2"
   },
-  "main": "./dist/src/index.js",
+  "main": "./dist/index.js",
   "publishConfig": {
-    "main": "./dist/src/index.js",
-    "typings": "./dist/src/index.d.ts"
+    "main": "./dist/index.js",
+    "typings": "./dist/types.d.ts"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/faebeee/refactor.git"
   },
   "scripts": {
-    "dev": "tsc -w",
-    "build": "tsc"
+    "dev": "esbuild src/index.ts --bundle --platform=node --packages=external --outdir=dist --allow-overwrite --watch",
+    "build": "esbuild src/index.ts --bundle --platform=node --packages=external --outdir=dist --allow-overwrite --minify"
   },
   "author": "",
   "license": "ISC",
@@ -36,6 +37,7 @@
     "@types/pngjs": "^6.0.5",
     "@types/node": "^22.5.5",
     "typescript": "^5.6.2",
-    "fix-esm-import-path": "^1.10.0"
+    "fix-esm-import-path": "^1.10.0",
+    "esbuild": "^0.24.0"
   }
 }

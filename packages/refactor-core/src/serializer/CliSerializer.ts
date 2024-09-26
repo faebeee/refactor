@@ -1,8 +1,9 @@
 import {logger} from "../logger";
-import figures from "figures";
+
 import SimpleTable from "cli-simple-table";
 import {ISerializer} from "./ISerializer.js";
-import {ICompareResult} from "../types/ICompareResult";
+import {ICompareResult} from "../types";
+import chalk from "chalk";
 
 export class CliSerializer implements ISerializer {
 
@@ -11,12 +12,9 @@ export class CliSerializer implements ISerializer {
     const table = new SimpleTable();
     table.header('Config', 'Page', 'Status');
 
-    console.log(results);
-
     results.forEach((result) => {
       result.results.forEach(entry => {
-        console.log(entry.id, entry.pass)
-        table.row(result.id, entry.id, entry.pass ? figures.tick : figures.cross)
+        table.row(result.id, entry.id, entry.pass ? chalk.green('PASS') : chalk.red('FAILED'))
       })
     })
 

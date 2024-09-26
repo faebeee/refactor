@@ -6,23 +6,26 @@
     "cli-simple-table": "^1.1.1",
     "commander": "^12.1.0",
     "figures": "^3.2.0",
+    "open": "^10.1.0",
     "progress": "^2.0.3",
     "puppeteer": "^23.3.0",
     "refaktor-core": "workspace:*",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "typescript": "^5.6.2",
-    "@types/progress": "^2.0.7"
+    "@types/progress": "^2.0.7",
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.2"
   },
   "publishConfig": {
-    "main": "./dist/cli/index.js"
+    "main": "./dist/index.js"
   },
   "scripts": {
-    "build": "npx tsc"
+    "dev": "esbuild cli/index.ts --bundle --platform=node --packages=external --outdir=dist --allow-overwrite --watch",
+    "build": "esbuild cli/index.ts --bundle --platform=node --packages=external --outdir=dist --allow-overwrite --minify"
   },
   "bin": {
-    "refaktor": "./dist/cli/index.js"
+    "refaktor": "./dist/index.js"
   },
   "repository": {
     "type": "git",

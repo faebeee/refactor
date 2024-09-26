@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "rootDir": "./",
-    "outDir": "dist",
+    "rootDir": "./src",
+//    "outDir": "dist/types",
+    "outFile": "dist/types.ts",
     "strict": true,
-    "target": "es6",
-    "module": "ES2020",
+    "target": "ESNext",
+    "module": "CommonJS",
     "sourceMap": true,
+    "emitDeclarationOnly": true,
     "declaration": true,
     "esModuleInterop": true,
     "moduleResolution": "node",

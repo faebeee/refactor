@@ -4,19 +4,21 @@ import {Command} from "commander";
 import {commandSetup} from "../lib/utils/command-setup";
 import {createScreenshots, takeScreenshotsForAllConfigs} from "../lib/utils/create-screenshots";
 import {
+  cleanupFolder,
   CliSerializer,
   FileSerializer,
   getConfig,
   getConfigOutputFolder,
   HtmlSerializer,
   IScreenshotType,
+  ResultCollector,
   transformAll,
   transformImageToBase64
 } from "refaktor-core";
 import {compare} from "../lib/utils/compare-images";
 import {cleanup} from "../lib/utils/cleanup";
 import path from "path";
-import {ResultCollector} from "refaktor-core";
+const open = import('open');
 
 const program = new Command();
 
@@ -50,17 +52,18 @@ program.command('compare')
   .option('--json', 'Only executes the command for a given config id')
   .option('--base64', 'Inline the images as base64 data')
   .option('--html', 'Inline the images as base64 data')
+  .option('--open', 'Open the folder with the results after the command finished')
   .description('Takes new screenshots and compares them to the already created ones')
   .action(async (pagesPath, opts) => {
     commandSetup(program);
     const configs = await getConfig(pagesPath);
-    const allResults:ResultCollector[] = []
+    const allResults: ResultCollector[] = []
     for (const index in configs) {
       const config = configs[index];
       const compareFolder = path.join(getConfigOutputFolder(config), 'compare', config.id)
       const diffFolder = path.join(getConfigOutputFolder(config), 'diff', config.id)
-      // await cleanupFolder(compareFolder);
-      // await cleanupFolder(diffFolder);
+      await cleanupFolder(compareFolder);
+      await cleanupFolder(diffFolder);
       await createScreenshots(config, true, IScreenshotType.COMPARE)
       const result = await compare(config)
       if (opts.base64) {
@@ -82,6 +85,10 @@ program.command('compare')
     if (opts.html) {
       const htmlSerializer = new HtmlSerializer('./report.html');
       await htmlSerializer.serialize(transformed);
+    }
+    
+    if (opts.open) {
+      await (await open).default('./')
     }
 
   });
