@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{title}</title>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+</head>
+<body>
+<h1>{file}</h1>
+
+    {#results}
+    <p>ID: {id}</p>
+    <p>{created_at}</p>
+    <p>Result: {?passed}Tests passed{:else}Tests failed{/passed}</p>
+
+    <table>
+        <thead>
+        <tr>
+            <td>
+            </td>
+            <td>
+                Current
+            </td>
+            <td>
+                Diff
+            </td>
+            <td>
+                Original
+            </td>
+        </tr>
+        </thead>
+        {#results}
+            <tr>
+                <td>
+                    <p>{id}</p>
+                    <a href="{url}" target="_blank">{config.path}</a>
+                </td>
+                <td>
+                    <img width="300px" src="data:image/png;base64,{current}"/>
+                </td>
+                <td style="min-width: 200px">
+                    {?diff}
+                        <img width="300px" src="data:image/png;base64,{diff}"/>
+                    {/diff}
+                </td>
+                <td>
+                    <img width="300px" src="data:image/png;base64,{original}"/>
+                </td>
+            </tr>
+        {/results}
+    </table>
+    {/results}
+
+</body>
+</html>

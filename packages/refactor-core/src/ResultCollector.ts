@@ -36,7 +36,7 @@ export class ResultCollector {
    * Transforms the results using a series of transformers.
    */
   async transform(): Promise<ICompareResult> {
-    const results:ICompareResultEntry[] = [];
+    const results: ICompareResultEntry[] = [];
 
     for (const rIndex in this.result.results) {
       results.push(await this.runTransformer(this.result.results[rIndex]))
@@ -44,7 +44,8 @@ export class ResultCollector {
 
     return {
       ...this.result,
-      results
+      results,
+      passed: !results.some(res => res.pass === false)
     };
   }
 

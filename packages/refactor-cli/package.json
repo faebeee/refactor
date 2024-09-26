@@ -1,6 +1,6 @@
 {
   "name": "refaktor-cli",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "",
   "dependencies": {
     "cli-simple-table": "^1.1.1",
@@ -10,6 +10,7 @@
     "progress": "^2.0.3",
     "puppeteer": "^23.3.0",
     "refaktor-core": "workspace:*",
+    "refaktor-ui": "workspace:*",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {

@@ -5,6 +5,7 @@ export type ICompareResult = {
   id: string,
   // config: Omit<IPagesConfig, 'setup'> & { pages: Omit<IPagesEntry, 'setup'>[] }
   results: ICompareResultEntry[]
+  passed: boolean
 }
 
 export type ICompareResultEntry = {

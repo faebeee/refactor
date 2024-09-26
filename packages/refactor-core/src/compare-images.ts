@@ -50,5 +50,4 @@ export const compareImages = async (config: IPagesConfig, onProgress?: () => voi
     }
   }
   return collector;
-
 }
