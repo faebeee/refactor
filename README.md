@@ -42,3 +42,30 @@ refaktor generate ./path-to-config.js
 ```bash
 refaktor compare ./path-to-config.js --ui
 ```
+
+## Commands
+
+### generate
+Generates the sources for later comparinson
+
+```bash
+refaktor inspect ./out.json
+```
+
+### compare
+Compares screenshots and reports the result to the CLI
+
+```bash
+refaktor compare ./test.js --cli
+```
+
+### inspect
+Opens up an UI for inspecting the result
+```bash
+refaktor inspect ./out.json
+```
+### help
+
+```bash
+refaktor help
+```

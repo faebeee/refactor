@@ -1,6 +1,6 @@
 {
   "name": "refaktor-core",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "",
   "type": "commonjs",
   "dependencies": {
@@ -18,16 +18,16 @@
     "main": "./dist/index.js",
     "typings": "./dist/types.d.ts"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/faebeee/refactor.git"
-  },
   "scripts": {
     "dev": "esbuild src/index.ts --bundle --platform=node --packages=external --outdir=dist --allow-overwrite --watch",
     "build": "esbuild src/index.ts --bundle --platform=node --packages=external --outdir=dist --allow-overwrite --minify"
   },
-  "author": "",
+  "author": "faebeee@gmail.com",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faebeee/refactor.git"
+  },
   "bugs": {
     "url": "https://github.com/faebeee/refactor/issues"
   },
