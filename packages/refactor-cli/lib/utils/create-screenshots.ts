@@ -1,13 +1,13 @@
 import puppeteer, { Page } from "puppeteer";
 import fs from 'fs';
 import ProgressBar from "progress";
-import figures from "figures";
 import SimpleTable from "cli-simple-table";
 import {
     doesFileExist,
     getScreenshotOutputConfig, IScreenshotType,
     logger
 } from "refaktor-core";
+import chalk from "chalk";
 
 /**
  *
@@ -39,8 +39,7 @@ export const createScreenshots = async (config, overwrite = false, type ) => {
 
     logger.debug(`Taking screenshots of ${config.pages.length} pages on ${config.url}`);
 
-    const bar = logger.level === 'info' ? new ProgressBar(`Taking Screenshots [:bar] ${figures.play} :url`, {
-        complete: figures.nodejs,
+    const bar = logger.level === 'info' ? new ProgressBar(`Taking Screenshots [:bar] :url`, {
         incomplete: ' ',
         width: 20,
         total: config.pages.length,
@@ -82,7 +81,7 @@ export const createScreenshots = async (config, overwrite = false, type ) => {
 export const takeScreenshotsForEntry = async (page, config, entry, type, overwrite) => {
     const {file, folder} = getScreenshotOutputConfig(config, entry, type);
     const url = `${config.url}${entry.path}`
-    logger.debug(`${figures.play} Generating screenshot for ${url}`);
+    logger.debug(`Generating screenshot for ${url}`);
     await fs.promises.mkdir(folder, {recursive: true});
     if (await doesFileExist(file) && !overwrite) {
         logger.debug(`Skipping`);
@@ -125,8 +124,7 @@ export const takeScreenshot = async (page, entry, url, screenshotFile, fullpage)
 export const takeScreenshotsForAllConfigs = async (configs, overwrite, type) => {
     const totalPages = configs.reduce((total, config) => total + config.pages.length, 0);
 
-    const bar = logger.level === 'info' ? new ProgressBar(`Taking Screenshots [:bar] :current/:total ETA: :etas ${figures.play} :url`, {
-        complete: figures.nodejs,
+    const bar = logger.level === 'info' ? new ProgressBar(`Taking Screenshots [:bar] :current/:total ETA: :etas :url`, {
         incomplete: ' ',
         width: 20,
         total: totalPages,
@@ -153,7 +151,7 @@ export const takeScreenshotsForAllConfigs = async (configs, overwrite, type) => 
             const url = `${config.url}${entry.path}`
             bar?.tick({url})
             const created = await takeScreenshotsForEntry(page, config, entry, type, overwrite)
-            table.row(config.id, entry.path, created ? figures.tick : 'Skipped')
+            table.row(config.id, entry.path, created ?chalk.green('Created') : chalk.yellow('Skipped'))
         }
         await browser.close()
     }

@@ -4,9 +4,9 @@
  * Module dependencies.
  */
 
-var createApp = require('./app');
-var debug = require('debug')('refactor-ui:server');
-var http = require('http');
+const createApp = require('./app');
+const debug = require('debug')('refactor-ui:server');
+const http = require('http');
 
 /**
  * Get port from environment and store in Express.

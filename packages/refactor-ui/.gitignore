@@ -1,0 +1,8 @@
+node_modules
+.idea
+pages.json
+screenshots
+.DS_Store
+bin
+dist
+mock

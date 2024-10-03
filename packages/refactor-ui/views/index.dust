@@ -2,47 +2,54 @@
 <html>
 <head>
     <title>{title}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <script>
+        tailwind.config = {
+            theme: {}
+        }
+    </script>
 </head>
-<body>
-<h1>{file}</h1>
+<body class="p-4">
 
     {#results}
-    <p>ID: {id}</p>
-    <p>{created_at}</p>
-    <p>Result: {?passed}Tests passed{:else}Tests failed{/passed}</p>
+    <h1 class="text-3xl bold">ID: {id}</h1>
+    <p>Created: {created_at}</p>
+    <p>Result: {?passed}<span class="bold text-green-400">Tests passed</span>{:else}<span class="bold text-red-500">Tests failed</span>{/passed}
+    </p>
 
-    <table>
+    <table class="w-full">
         <thead>
-        <tr>
-            <td>
+        <tr class="sticky top-0 bg-white border-b">
+            <td class="p-4">
+                TestId
             </td>
-            <td>
+            <td class="p-4">
                 Current
             </td>
-            <td>
+            <td class="p-4">
                 Diff
             </td>
-            <td>
+            <td class="p-4">
                 Original
             </td>
         </tr>
         </thead>
         {#results}
-            <tr>
-                <td>
+            <tr class="border-b">
+                <td class="py-4">
                     <p>{id}</p>
-                    <a href="{url}" target="_blank">{config.path}</a>
+                    <a href="{url}" class="text-blue-400 text-ellipsis w-max" target="_blank">{config.path}</a>
                 </td>
-                <td>
+                <td class="py-4">
                     <img width="300px" src="data:image/png;base64,{current}"/>
                 </td>
-                <td style="min-width: 200px">
+                <td class="py-4" style="min-width: 200px">
                     {?diff}
                         <img width="300px" src="data:image/png;base64,{diff}"/>
                     {/diff}
                 </td>
-                <td>
+                <td class="py-4">
                     <img width="300px" src="data:image/png;base64,{original}"/>
                 </td>
             </tr>
