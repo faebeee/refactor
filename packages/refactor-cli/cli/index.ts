@@ -1,119 +1,147 @@
 #!/usr/bin/env node
 
-import {Command} from "commander";
-import {commandSetup} from "../lib/utils/command-setup";
-import {createScreenshots, takeScreenshotsForAllConfigs} from "../lib/utils/create-screenshots";
-import {
-  cleanupFolder,
-  CliSerializer,
-  FileSerializer,
-  getConfig,
-  getConfigOutputFolder,
-  IScreenshotType,
-  logger,
-  ResultCollector,
-  transformAll,
-  transformImageToBase64
-} from "refaktor-core";
-import {compare} from "../lib/utils/compare-images";
-import {cleanup} from "../lib/utils/cleanup";
-import path from "path";
+import { Command } from 'commander';
+import { createServer } from 'http-server';
+import path from 'path';
 import server from 'refaktor-ui';
+import { cleanup } from '../lib/utils/cleanup';
+import { commandSetup } from '../lib/utils/command-setup';
+import { takeScreenshotsForAllConfigs } from '../lib/utils/create-screenshots';
+import { parseStorybookJson } from '../lib/utils/parse-storybook-json';
+import { MinIOAdapter } from '../src/file-adapters';
+import { getConfig } from '../src/get-config';
+import { ImageComparer } from '../src/ImageComparer';
+import { logger } from '../src/logger';
+import { ResultCollector } from '../src/ResultCollector';
+import { ScreenshotGenerator } from '../src/ScreenshotGenerator';
+import { CliSerializer, FileSerializer } from '../src/serializer';
+import { transformAll } from '../src/transformers';
+import { ImageBase64Transformer } from '../src/transformers/ImageBase64Transformer';
+import { IScreenshotType } from '../src/types';
 
 const open = import('open');
 
 const program = new Command();
 
 program
-  .name('refactor')
-  .description('Generates screenshots and compares them to a later run to ensure the refactoring did not change anything unintended')
-  .option('-s, --silent', 'be silent')
-  .option('-v, --verbose', 'be verbose')
+.name('refactor')
+.description('Generates screenshots and compares them to a later run to ensure the refactoring did not change anything unintended')
+.option('-s, --silent', 'be silent')
+.option('-v, --verbose', 'be verbose');
 
 program.command('generate')
-  .argument('config', 'Path to your config file')
-  .option('--only <id>', 'Only executes the command for a given config id')
-  .option('--overwrite', 'Generates a new screenshot even if they already exists.')
-  .description('Generates new screenshots')
-  .action(async (pagesPath, opts) => {
-    commandSetup(program);
-    const configs = await getConfig(pagesPath);
-    await takeScreenshotsForAllConfigs(configs, opts.overwrite ?? false, IScreenshotType.ORIGINAL);
-    // for (const index in configs) {
-    //     const config = configs[index];
-    //     if (!opts.only || !!opts.only && config.only === opts.id) {
-    //         await createScreenshots(config, )
-    //     }
-    // }
-  });
+.option('--config <file>', 'Path to your config file')
+.option('--storybook <folder>', 'Path to your config file')
+.option('--overwrite', 'Generates a new screenshot even if they already exists.')
+.description('Generates new screenshots')
+.action(async (opts) => {
+  commandSetup(program);
+
+    // await takeScreenshotsForAllConfigs([config], opts.overwrite ?? false, IScreenshotType.ORIGINAL);
+    const generator = new ScreenshotGenerator(new MinIOAdapter({
+      endPoint: 'localhost',
+      port: 9000,
+      useSSL: false,
+      accessKey: 'ayBoeF0Sy3b3CTHweL5q',
+      secretKey: 'i4P16kEjO13ANEZEoBf94ZcWIry6miv8Uts7H2JU',
+    }, 'refaktor-local-dev'));
+
+  if (opts.storybook) {
+    const server = createServer({
+      root: path.resolve(process.cwd(), opts.storybook)
+    });
+    server.listen(8080, 'localhost');
+    logger.debug(`Server listening on ${ server.address }`);
+    const config = parseStorybookJson(opts.storybook);
+    await generator.takeScreenshots(config, opts.overwrite ?? false, IScreenshotType.ORIGINAL);
+  } else {
+    const configs = await getConfig(opts.config);
+    await generator.takeScreenshotsForAll(configs, opts.overwrite ?? false, IScreenshotType.ORIGINAL);
+  }
+});
 
 program.command('compare')
-  .argument('config', 'Path to the config .js')
-  .option('--out <file>', 'Only executes the command for a given config id')
-  .option('--cli', 'Prints the result in a table in the CLI')
-  .option('--base64', 'Inline the images as base64 data')
-  .option('--open', 'Open the folder with the results after the command finished')
-  .option('--ui', 'Inspect the result in browser UI')
-  .description('Takes new screenshots and compares them to the already created ones')
-  .action(async (pagesPath, opts) => {
-    commandSetup(program);
-    const configs = await getConfig(pagesPath);
-    const allResults: ResultCollector[] = []
-    for (const index in configs) {
-      const config = configs[index];
-      const compareFolder = path.join(getConfigOutputFolder(config), 'compare', config.id)
-      const diffFolder = path.join(getConfigOutputFolder(config), 'diff', config.id)
-      await cleanupFolder(compareFolder);
-      await cleanupFolder(diffFolder);
-      await createScreenshots(config, true, IScreenshotType.COMPARE)
-      const result = await compare(config)
-      if (opts.base64 || opts.ui) {
-        result.addTransformer(transformImageToBase64);
-      }
-      allResults.push(result);
-    }
+.option('--config <file>', 'Path to the config .js')
+.option('--storybook <folder>', 'Path to your config file')
+.option('--out <file>', 'Only executes the command for a given config id')
+.option('--cli', 'Prints the result in a table in the CLI')
+.option('--base64', 'Inline the images as base64 data')
+.option('--open', 'Open the folder with the results after the command finished')
+.option('--ui', 'Inspect the result in browser UI')
+.description('Takes new screenshots and compares them to the already created ones')
+.action(async (opts) => {
+  commandSetup(program);
+  if (opts.storybook) {
+    const server = createServer({
+      root: path.resolve(process.cwd(), opts.storybook)
+    });
+    server.listen(8080, 'localhost');
+    logger.debug(`Server listening on ${ server.address }`);
+  }
+  const configs = opts.storybook ? [parseStorybookJson(opts.storybook)] : await getConfig(opts.config);
+  const allResults: ResultCollector[] = [];
+  const fileAdapter = new MinIOAdapter({
+    endPoint: 'localhost',
+    port: 9000,
+    useSSL: false,
+    accessKey: 'ayBoeF0Sy3b3CTHweL5q',
+    secretKey: 'i4P16kEjO13ANEZEoBf94ZcWIry6miv8Uts7H2JU',
+  }, 'refaktor-local-dev');
 
-    const transformed = await transformAll(allResults);
+  for (const index in configs) {
+    const config = configs[index];
+    const generator = new ScreenshotGenerator(fileAdapter);
+    await generator.takeScreenshots(config, true, IScreenshotType.COMPARE);
 
-    if (opts.cli) {
-      const cliSerializer = new CliSerializer()
-      await cliSerializer.serialize(transformed);
+    const comparer = new ImageComparer(fileAdapter);
+    const result = await comparer.compare(config);
+    if (opts.base64 || opts.ui) {
+      // result.addTransformer(new ImageBase64Transformer(fileAdapter));
     }
+    allResults.push(result);
+  }
 
-    if (opts.out) {
-      const fileSerializer = new FileSerializer(opts.out);
-      await fileSerializer.serialize(transformed);
-    }
+  const transformed = await transformAll(allResults);
 
-    if (opts.open) {
-      await (await open).default('./')
-    }
+  if (opts.cli) {
+    const cliSerializer = new CliSerializer();
+    await cliSerializer.serialize(transformed);
+  }
 
-    if (opts.ui) {
-      server(transformed);
-      await (await open).default('http://localhost:3000')
-      logger.info('Serving UI @ http://localhost:3000')
-    }
-  });
+  if (opts.out) {
+    const fileSerializer = new FileSerializer(opts.out);
+    await fileSerializer.serialize(transformed);
+  }
+
+  if (opts.open) {
+    await (await open).default('./');
+  }
+
+  if (opts.ui) {
+    server(transformed);
+    await (await open).default('http://localhost:3000');
+    logger.info('Serving UI @ http://localhost:3000');
+  }
+});
 
 
 program.command('inspect')
-  .argument('file', 'Path to the config .js')
-  .description('Opens up the UI to inspect a json file generated by the compare command')
-  .action(async (file) => {
-    const results = require(path.resolve(process.cwd(), file));
-    server(results);
-    logger.info('Serving UI @ http://localhost:3000')
-    await (await open).default('http://localhost:3000')
-  });
+.argument('file', 'Path to the config .js')
+.description('Opens up the UI to inspect a json file generated by the compare command')
+.action(async (file) => {
+  const results = require(path.resolve(process.cwd(), file));
+  server(results);
+  logger.info('Serving UI @ http://localhost:3000');
+  await (await open).default('http://localhost:3000');
+});
 
 program.command('cleanup')
-  .argument('config', 'Path to the config .js')
-  .description('Remove unused screenshots')
-  .action(async (pagesPath, opts) => {
-    commandSetup(program);
-    const configs = await getConfig(pagesPath);
-    await cleanup(configs);
-  });
+.argument('config', 'Path to the config .js')
+.description('Remove unused screenshots')
+.action(async (pagesPath, opts) => {
+  commandSetup(program);
+  const configs = await getConfig(pagesPath);
+  await cleanup(configs);
+});
 
 program.parse();

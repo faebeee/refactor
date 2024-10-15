@@ -1,11 +1,7 @@
-import { logger } from "refaktor-core";
 import { Command } from 'commander';
+import { logger } from '../../src/logger';
 
-/**
- *
- * @param {Command} program
- */
-export const commandSetup = (program) => {
+export const commandSetup = (program:Command) => {
     const quiet = program.opts().silent;
     if (quiet) {
         logger.level = 'silent';

@@ -1,5 +1,6 @@
 import path from "path";
-import { cleanupFolder, logger } from "refaktor-core";
+import { cleanupFolder } from '../../src/fs-utils';
+import { logger } from "../../src/logger";
 
 /**
  *

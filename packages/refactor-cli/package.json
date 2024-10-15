@@ -4,20 +4,32 @@
   "description": "",
   "type": "commonjs",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.670.0",
+    "@aws-sdk/lib-storage": "^3.670.0",
+    "chalk": "^4.1.2",
     "cli-simple-table": "^1.1.1",
     "commander": "^12.1.0",
     "figures": "^3.2.0",
+    "http-server": "^14.1.1",
+    "minio": "^8.0.1",
     "open": "^10.1.0",
+    "pino": "^9.4.0",
+    "pino-pretty": "^11.2.2",
+    "pixelmatch": "^5.2.1",
+    "pngjs": "^5.0.0",
     "progress": "^2.0.3",
     "puppeteer": "^23.3.0",
-    "refaktor-core": "workspace:*",
     "refaktor-ui": "workspace:*",
-    "ts-node": "^10.9.2",
-    "chalk": "^4.1.2"
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
+    "@types/http-server": "^0.12.4",
+    "@types/node": "^22.5.5",
+    "@types/pixelmatch": "^5.2.6",
+    "@types/pngjs": "^6.0.5",
     "@types/progress": "^2.0.7",
     "esbuild": "^0.24.0",
+    "fix-esm-import-path": "^1.10.0",
     "typescript": "^5.6.2"
   },
   "publishConfig": {
