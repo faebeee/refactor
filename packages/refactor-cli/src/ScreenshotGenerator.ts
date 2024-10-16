@@ -1,9 +1,8 @@
 import fs from 'fs/promises';
 import ProgressBar from 'progress';
 import { Page } from 'puppeteer';
-import { getBrowser } from '../lib/utils/create-screenshots';
+import { getBrowser } from './utils/create-screenshots';
 import { IFileAdapter } from './file-adapters';
-import { doesFileExist } from './fs-utils';
 import { getScreenshotOutputConfig } from './get-screenshot-file-name';
 import { logger } from './logger';
 import { IPagesConfig, IPagesEntry, IScreenshotType } from './types';
@@ -11,14 +10,11 @@ import { IPagesConfig, IPagesEntry, IScreenshotType } from './types';
 export class ScreenshotGenerator {
   private page: Page | null = null;
 
-  constructor(private fileAdapter: IFileAdapter) {
+  constructor(private fileAdapter: IFileAdapter | null = null) {
   }
 
-  async takeScreenshotsForAll(configs: IPagesConfig[], overwrite: boolean, type: IScreenshotType): Promise<void> {
-    for (const configIndexs in configs) {
-      const config = configs[configIndexs];
-      await this.takeScreenshots(config, overwrite, type);
-    }
+  setFileAdapter(fileAdapter: IFileAdapter) {
+    this.fileAdapter = fileAdapter;
   }
 
   async takeScreenshots(config: IPagesConfig, overwrite: boolean, type: IScreenshotType): Promise<void> {
@@ -28,19 +24,19 @@ export class ScreenshotGenerator {
       width: config.viewport?.[0] ?? 1600,
       height: config.viewport?.[1] ?? 1200
     });
-    logger.debug(`Taking screenshots of ${ config.pages.length } pages on ${ config.url }`);
+    logger.debug(`Taking screenshots of ${ config.pages!.length } pages on ${ config.url }`);
 
     const bar = logger.level === 'info' ? new ProgressBar(`Taking Screenshots :current/:total [:bar] :percent ETA :etas Elapsed :elapsed`, {
       incomplete: ' ',
       width: 20,
-      total: config.pages.length,
+      total: config.pages!.length,
     }) : null;
 
 
     const stats = {
       created: 0,
       skipped: 0,
-      failed:0
+      failed: 0
     };
 
     if (config.setup) {
@@ -57,7 +53,8 @@ export class ScreenshotGenerator {
       try {
         await this.takeScreenshotsForEntry(config, view, type, overwrite);
         stats.created++;
-      }catch{
+      } catch (e) {
+        throw e;
         stats.failed++;
       }
     }
@@ -77,24 +74,29 @@ export class ScreenshotGenerator {
     logger.debug(`Generating screenshot for ${ url }`);
     await fs.mkdir(folder, { recursive: true });
 
-    if (await this.fileAdapter.fileExists(config, type, fileName) && !overwrite) {
+    if (await this.fileAdapter!.fileExists(config, type, fileName) && !overwrite) {
       logger.debug(`Skipping`);
       return false;
     }
 
     logger.debug(`Visit ${ url }`);
-    await this.page.goto(url, { waitUntil: 'networkidle2' });
-    if (entry.setup) {
-      logger.debug(`Start running custom setup function`);
-      await entry.setup?.(this.page);
-      logger.debug(`Custom setup complete`);
+    try {
+      await this.page.goto(url, { waitUntil: 'networkidle2', timeout: 60_000 });
+      if (entry.setup) {
+        logger.debug(`Start running custom setup function`);
+        await entry.setup?.(this.page);
+        logger.debug(`Custom setup complete`);
+      }
+
+      logger.debug(`Taking screenshot and save it to ${ file }`);
+      await this.page.screenshot({ path: file, fullPage: true });
+
+      await this.fileAdapter!.writeFile(config, type, fileName, await fs.readFile(file));
+      logger.debug(`Remove folder tmp folder ${ folder }`);
+      await fs.rm(folder, { recursive: true, force: true });
+      return true;
+    } catch {
+      return false;
     }
-
-    logger.debug(`Taking screenshot and save it to ${ file }`);
-    await this.page.screenshot({ path: file, fullPage: true });
-
-    await this.fileAdapter.writeFile(config, type, fileName, await fs.readFile(file));
-
-    return true;
   }
 }

@@ -1,6 +1,6 @@
 import path from "path";
-import { cleanupFolder } from '../../src/fs-utils';
-import { logger } from "../../src/logger";
+import { cleanupFolder } from '../fs-utils';
+import { logger } from "../logger";
 
 /**
  *

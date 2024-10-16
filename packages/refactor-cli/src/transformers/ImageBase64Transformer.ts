@@ -1,17 +1,18 @@
-import fs from 'fs';
 import { IFileAdapter } from '../file-adapters';
-import { logger } from '../logger';
-import { ICompareResultEntry, ITransformer } from '../types';
+import { ICompareResultEntry, IPagesConfig, IScreenshotType, ITransformer } from '../types';
 
 export class ImageBase64Transformer implements ITransformer {
-  constructor(private fileAdapter: IFileAdapter) {
+  constructor(private fileAdapter: IFileAdapter, private config: IPagesConfig) {
   }
 
   async transform(entry: ICompareResultEntry): Promise<ICompareResultEntry> {
-    // this.fileAdapter.readFile(this.config)
-    const original = await fs.promises.readFile(entry.original, { encoding: 'base64' });
-    const diff = entry.pass ? '' : await fs.promises.readFile(entry.diff, { encoding: 'base64' });
-    const current = await fs.promises.readFile(entry.current, { encoding: 'base64' });
+    const originalFileBuffer = await this.fileAdapter.readFile(this.config, IScreenshotType.ORIGINAL, `${ entry.id }.png`);
+    const diffFileBuffer = await this.fileAdapter.readFile(this.config, IScreenshotType.DIFF, `${ entry.id }.png`);
+    const currentFileBuffer = await this.fileAdapter.readFile(this.config, IScreenshotType.COMPARE, `${ entry.id }.png`);
+
+    const original = originalFileBuffer?.toString('base64') ?? null;
+    const diff = diffFileBuffer?.toString('base64') ?? null;
+    const current = currentFileBuffer?.toString('base64') ?? null;
 
     return {
       ...entry,

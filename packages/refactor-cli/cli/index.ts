@@ -1,23 +1,19 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander';
-import { createServer } from 'http-server';
 import path from 'path';
 import server from 'refaktor-ui';
-import { cleanup } from '../lib/utils/cleanup';
-import { commandSetup } from '../lib/utils/command-setup';
-import { takeScreenshotsForAllConfigs } from '../lib/utils/create-screenshots';
-import { parseStorybookJson } from '../lib/utils/parse-storybook-json';
 import { MinIOAdapter } from '../src/file-adapters';
 import { getConfig } from '../src/get-config';
 import { ImageComparer } from '../src/ImageComparer';
 import { logger } from '../src/logger';
-import { ResultCollector } from '../src/ResultCollector';
 import { ScreenshotGenerator } from '../src/ScreenshotGenerator';
 import { CliSerializer, FileSerializer } from '../src/serializer';
-import { transformAll } from '../src/transformers';
 import { ImageBase64Transformer } from '../src/transformers/ImageBase64Transformer';
 import { IScreenshotType } from '../src/types';
+import { cleanup } from '../src/utils/cleanup';
+import { commandSetup } from '../src/utils/command-setup';
+import { getAdapter } from '../src/utils/get-adapter';
 
 const open = import('open');
 
@@ -31,38 +27,21 @@ program
 
 program.command('generate')
 .option('--config <file>', 'Path to your config file')
-.option('--storybook <folder>', 'Path to your config file')
 .option('--overwrite', 'Generates a new screenshot even if they already exists.')
 .description('Generates new screenshots')
 .action(async (opts) => {
   commandSetup(program);
 
-    // await takeScreenshotsForAllConfigs([config], opts.overwrite ?? false, IScreenshotType.ORIGINAL);
-    const generator = new ScreenshotGenerator(new MinIOAdapter({
-      endPoint: 'localhost',
-      port: 9000,
-      useSSL: false,
-      accessKey: 'ayBoeF0Sy3b3CTHweL5q',
-      secretKey: 'i4P16kEjO13ANEZEoBf94ZcWIry6miv8Uts7H2JU',
-    }, 'refaktor-local-dev'));
+  const config = await getConfig(opts.config);
+  const generator = new ScreenshotGenerator();
+  const adapter = getAdapter(config);
+  generator.setFileAdapter(adapter);
+  await generator.takeScreenshots(config, opts.overwrite ?? false, IScreenshotType.ORIGINAL);
 
-  if (opts.storybook) {
-    const server = createServer({
-      root: path.resolve(process.cwd(), opts.storybook)
-    });
-    server.listen(8080, 'localhost');
-    logger.debug(`Server listening on ${ server.address }`);
-    const config = parseStorybookJson(opts.storybook);
-    await generator.takeScreenshots(config, opts.overwrite ?? false, IScreenshotType.ORIGINAL);
-  } else {
-    const configs = await getConfig(opts.config);
-    await generator.takeScreenshotsForAll(configs, opts.overwrite ?? false, IScreenshotType.ORIGINAL);
-  }
 });
 
 program.command('compare')
 .option('--config <file>', 'Path to the config .js')
-.option('--storybook <folder>', 'Path to your config file')
 .option('--out <file>', 'Only executes the command for a given config id')
 .option('--cli', 'Prints the result in a table in the CLI')
 .option('--base64', 'Inline the images as base64 data')
@@ -71,37 +50,23 @@ program.command('compare')
 .description('Takes new screenshots and compares them to the already created ones')
 .action(async (opts) => {
   commandSetup(program);
-  if (opts.storybook) {
-    const server = createServer({
-      root: path.resolve(process.cwd(), opts.storybook)
-    });
-    server.listen(8080, 'localhost');
-    logger.debug(`Server listening on ${ server.address }`);
-  }
-  const configs = opts.storybook ? [parseStorybookJson(opts.storybook)] : await getConfig(opts.config);
-  const allResults: ResultCollector[] = [];
-  const fileAdapter = new MinIOAdapter({
-    endPoint: 'localhost',
-    port: 9000,
-    useSSL: false,
-    accessKey: 'ayBoeF0Sy3b3CTHweL5q',
-    secretKey: 'i4P16kEjO13ANEZEoBf94ZcWIry6miv8Uts7H2JU',
-  }, 'refaktor-local-dev');
 
-  for (const index in configs) {
-    const config = configs[index];
-    const generator = new ScreenshotGenerator(fileAdapter);
-    await generator.takeScreenshots(config, true, IScreenshotType.COMPARE);
+  const config = await getConfig(opts.config);
 
-    const comparer = new ImageComparer(fileAdapter);
-    const result = await comparer.compare(config);
-    if (opts.base64 || opts.ui) {
-      // result.addTransformer(new ImageBase64Transformer(fileAdapter));
-    }
-    allResults.push(result);
+  const generator = new ScreenshotGenerator();
+  const comparer = new ImageComparer();
+  const adapter = getAdapter(config);
+  generator.setFileAdapter(adapter);
+  comparer.setFileAdapter(adapter);
+
+  await generator.takeScreenshots(config, true, IScreenshotType.COMPARE);
+
+  const result = await comparer.compare(config);
+  if (opts.base64 || opts.ui) {
+    result.addTransformer(new ImageBase64Transformer(adapter, config));
   }
 
-  const transformed = await transformAll(allResults);
+  const transformed = await result.transform();
 
   if (opts.cli) {
     const cliSerializer = new CliSerializer();

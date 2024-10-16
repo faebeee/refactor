@@ -1,4 +1,3 @@
-import * as Buffer from 'buffer';
 import { Client, ClientOptions } from 'minio';
 import { logger } from '../logger';
 import { IPagesConfig, IScreenshotType } from '../types';
@@ -22,27 +21,28 @@ export class MinIOAdapter implements IFileAdapter {
     }
   }
 
-
   async deleteFile(config: IPagesConfig, type: IScreenshotType, fileName: string): Promise<void> {
     const file = `${ config.id }/${ type }/${ fileName }`;
     logger.debug(`Remove file ${ file } from MinIo`);
     await this.client.removeObject(this.bucket, file);
   }
 
-
-  async readFile(config: IPagesConfig, type: IScreenshotType, fileName: string): Promise<Buffer> {
+  async readFile(config: IPagesConfig, type: IScreenshotType, fileName: string): Promise<Buffer | null> {
     const file = `${ config.id }/${ type }/${ fileName }`;
     logger.debug(`Read file ${ file } from MinIo`);
-
-    const stream = await this.client.getObject(this.bucket, file);
-    return new Promise((resolve, reject) => {
-      let buffer = Buffer.from([]);
-      stream.on('data', buf => {
-        buffer = Buffer.concat([buffer, buf]);
+    try {
+      const stream = await this.client.getObject(this.bucket, file);
+      return new Promise((resolve, reject) => {
+        let buffer = Buffer.from([]);
+        stream.on('data', buf => {
+          buffer = Buffer.concat([buffer, buf]);
+        });
+        stream.on('end', () => resolve(buffer));
+        stream.on('error', reject);
       });
-      stream.on('end', () => resolve(buffer));
-      stream.on('error', reject);
-    });
+    } catch {
+      return null;
+    }
   }
 
   async writeFile(config: IPagesConfig, type: IScreenshotType, fileName: string, data: Buffer) {

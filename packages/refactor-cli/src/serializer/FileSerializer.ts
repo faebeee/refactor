@@ -11,7 +11,7 @@ export class FileSerializer implements ISerializer {
     this.file = file
   }
 
-  async serialize(results: ICompareResult[]) {
+  async serialize(results: ICompareResult) {
     logger.info(`Write results to ${this.file}`);
     await fs.promises.writeFile(this.file, JSON.stringify(results, null, 2));
   }

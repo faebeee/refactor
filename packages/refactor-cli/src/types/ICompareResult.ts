@@ -1,4 +1,4 @@
-import {IPagesEntry} from "./IPagesEntry";
+import { IPagesEntry } from './IPagesEntry';
 
 export type ICompareResult = {
   created_at: string;
@@ -13,7 +13,7 @@ export type ICompareResultEntry = {
   url: string;
   pass: boolean
   config: Omit<IPagesEntry, 'setup'>;
-  original: string;
-  current: string;
-  diff: string
+  original: string | null;
+  current: string | null;
+  diff: string | null
 }

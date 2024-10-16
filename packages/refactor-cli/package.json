@@ -9,6 +9,7 @@
     "chalk": "^4.1.2",
     "cli-simple-table": "^1.1.1",
     "commander": "^12.1.0",
+    "cosmiconfig": "^9.0.0",
     "figures": "^3.2.0",
     "http-server": "^14.1.1",
     "minio": "^8.0.1",
@@ -20,7 +21,8 @@
     "progress": "^2.0.3",
     "puppeteer": "^23.3.0",
     "refaktor-ui": "workspace:*",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "y-config": "^2.0.1"
   },
   "devDependencies": {
     "@types/http-server": "^0.12.4",
@@ -36,8 +38,10 @@
     "main": "./dist/index.js"
   },
   "scripts": {
-    "dev": "esbuild cli/index.ts --bundle --platform=node --packages=external --outdir=dist --allow-overwrite --watch",
-    "build": "esbuild cli/index.ts --bundle --platform=node --packages=external --outdir=dist --allow-overwrite --minify"
+    "dev": "npm run build -- --watch",
+    "dev:lib": "npm run build:lib -- --watch",
+    "build": "esbuild cli/index.ts --bundle --platform=node --packages=external --outdir=dist --allow-overwrite --minify",
+    "build:lib": "esbuild lib/storybook-pages-importer.ts --bundle --platform=node --outdir=dist --allow-overwrite --minify"
   },
   "bin": {
     "refaktor": "./dist/index.js"

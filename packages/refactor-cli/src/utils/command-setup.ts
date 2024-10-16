@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { logger } from '../../src/logger';
+import { logger } from '../logger';
 
 export const commandSetup = (program:Command) => {
     const quiet = program.opts().silent;
